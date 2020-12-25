@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/SimakovVA.NCHTEC/source/repos/ArgusSoftTest
+# Install script for directory: C:/Users/Vladimir Simakov/source/repos/ArgusSoftTest
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/SimakovVA.NCHTEC/source/repos/ArgusSoftTest/out/install/x64-Debug (по умолчанию)")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/Vladimir Simakov/source/repos/ArgusSoftTest/out/install/x64-Debug (по умолчанию)")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/SimakovVA.NCHTEC/source/repos/ArgusSoftTest/out/build/x64-Debug (по умолчанию)/ArgusSoftTest/cmake_install.cmake")
+  include("C:/Users/Vladimir Simakov/source/repos/ArgusSoftTest/out/build/x64-Debug (по умолчанию)/ArgusSoftTest/cmake_install.cmake")
 
 endif()
 
@@ -46,5 +46,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/SimakovVA.NCHTEC/source/repos/ArgusSoftTest/out/build/x64-Debug (по умолчанию)/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/Vladimir Simakov/source/repos/ArgusSoftTest/out/build/x64-Debug (по умолчанию)/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

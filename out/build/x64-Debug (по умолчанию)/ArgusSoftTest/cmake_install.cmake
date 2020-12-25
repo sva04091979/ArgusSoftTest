@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/SimakovVA.NCHTEC/source/repos/ArgusSoftTest/ArgusSoftTest
+# Install script for directory: C:/Users/Vladimir Simakov/source/repos/ArgusSoftTest/ArgusSoftTest
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/SimakovVA.NCHTEC/source/repos/ArgusSoftTest/out/install/x64-Debug (по умолчанию)")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/Vladimir Simakov/source/repos/ArgusSoftTest/out/install/x64-Debug (по умолчанию)")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

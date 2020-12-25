@@ -53,7 +53,7 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "ArgusSoftTest::@db7b38a854f2fcde1d67",
-					"jsonFile" : "target-ArgusSoftTest-Debug-259e18dd8b1bf6f6467e.json",
+					"jsonFile" : "target-ArgusSoftTest-Debug-2d48b6a0eb4ccbee4503.json",
 					"name" : "ArgusSoftTest",
 					"projectIndex" : 0
 				}
@@ -63,12 +63,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/SimakovVA.NCHTEC/source/repos/ArgusSoftTest/out/build/x64-Debug (по умолчанию)",
-		"source" : "C:/Users/SimakovVA.NCHTEC/source/repos/ArgusSoftTest"
+		"build" : "C:/Users/Vladimir Simakov/source/repos/ArgusSoftTest/out/build/x64-Debug (по умолчанию)",
+		"source" : "C:/Users/Vladimir Simakov/source/repos/ArgusSoftTest"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 0
+		"minor" : 1
 	}
 }
