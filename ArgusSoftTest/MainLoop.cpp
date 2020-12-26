@@ -47,8 +47,7 @@ map<string, ECommand> gCommands = {
 
 void MainLoop() {
 	CWork work;
-	bool isWork = true;
-	while (isWork) {
+	while (true) {
 		string input;
 		cout << work.Prefix();
 		getline(cin, input);
