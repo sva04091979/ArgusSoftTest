@@ -21,6 +21,7 @@ public:
 	bool Free(vector<string>& mParams);
 	bool Blur(vector<string>& mParams);
 	bool Resize(vector<string>& mParams);
+	void Dir();
 	string& Prefix();
 private:
 	void MakePrefix(string& mName);

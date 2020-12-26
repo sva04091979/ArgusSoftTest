@@ -23,7 +23,7 @@ bool CWork::Load(vector<string>& mParams) {
 			auto it = cContainer.insert({ mParams[0],nullptr });
 			if (it.second) {
 				ret = true;
-				cWork = new CMat(mat);;
+				cWork = new CMat(mat);
 				it.first->second = cWork;
 				MakePrefix(mParams[0]);
 				cout << "load ok" << endl;
@@ -113,6 +113,11 @@ bool CWork::Free(vector<string> &mParams){
 	return ret;
 }
 
+void CWork::Dir() {
+	for (auto it : cContainer)
+		cout << it.first << endl;
+}
+
 bool CWork::Blur(vector<string>& mParams) {
 	vector<string> params;
 	cv::Size blurSize;
@@ -132,7 +137,7 @@ bool CWork::Blur(vector<string>& mParams) {
 				cv::Mat dst;
 				cv::blur(cWork->Img(), dst, blurSize);
 				ret = true;
-				cWork = new CMat(dst);;
+				cWork = new CMat(dst);
 				it.first->second = cWork;
 				MakePrefix(mParams[0]);
 				cout << "blur ok" << endl;
@@ -151,7 +156,7 @@ bool CWork::Blur(vector<string>& mParams) {
 				cv::Mat dst;
 				cv::blur(it->second->Img(), dst, blurSize);
 				ret = true;
-				cWork = new CMat(dst);;
+				cWork = new CMat(dst);
 				_it.first->second = cWork;
 				MakePrefix(mParams[1]);
 				cout << "blur ok" << endl;
@@ -188,7 +193,7 @@ bool CWork::Resize(vector<string>& mParams) {
 					cv::Mat dst;
 					cv::resize(cWork->Img(), dst, _size);
 					ret = true;
-					cWork = new CMat(dst);;
+					cWork = new CMat(dst);
 					it.first->second = cWork;
 					MakePrefix(mParams[0]);
 					cout << "resize ok" << endl;
@@ -213,7 +218,7 @@ bool CWork::Resize(vector<string>& mParams) {
 					cv::Mat dst;
 					cv::resize(it->second->Img(), dst, _size);
 					ret = true;
-					cWork = new CMat(dst);;
+					cWork = new CMat(dst);
 					_it.first->second = cWork;
 					MakePrefix(mParams[1]);
 					cout << "resize ok" << endl;

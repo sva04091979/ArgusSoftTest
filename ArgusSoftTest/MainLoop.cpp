@@ -14,6 +14,7 @@ enum class ECommand
 	Load,
 	Store,
 	Switch,
+	Dir,
 	Free,
 	Blur,
 	Resize,
@@ -33,6 +34,7 @@ map<string, ECommand> gCommands = {
 	{"store",ECommand::Store},
 	{"s",ECommand::Store},
 	{"switch",ECommand::Switch},
+	{"dir",ECommand::Dir},
 	{"free",ECommand::Free},
 	{"blur",ECommand::Blur},
 	{"resize",ECommand::Resize},
@@ -61,6 +63,9 @@ void MainLoop() {
 			break;
 		case ECommand::Switch:
 			work.Switch(in.second);
+			break;
+		case ECommand::Dir:
+			work.Dir();
 			break;
 		case ECommand::Free:
 			work.Free(in.second);
