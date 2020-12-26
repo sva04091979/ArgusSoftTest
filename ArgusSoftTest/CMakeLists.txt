@@ -8,7 +8,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 link_directories(${CMAKE_BINARY_DIR}/bin)
 
 # Добавьте источник в исполняемый файл этого проекта.
-add_executable (ArgusSoftTest "ArgusSoftTest.cpp" "ArgusSoftTest.h" "MainLoop.cpp" "MainLoop.h")
+add_executable (ArgusSoftTest "ArgusSoftTest.cpp" "ArgusSoftTest.h" "MainLoop.cpp" "MainLoop.h"  "CMat.h" "CMat.cpp" "Help.cpp" "CWork.h" "CWork.cpp" "Help.h")
 
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.
 

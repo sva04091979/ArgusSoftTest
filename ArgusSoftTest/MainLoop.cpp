@@ -5,17 +5,9 @@
 #include <map>
 #include <vector>
 #include "opencv2/opencv.hpp"
+#include "CWork.h"
 
 using namespace std;
-
-struct SImg {
-	cv::Mat img;
-	cv::Mat dst;
-};
-
-map < string, SImg > matList;
-string prefix;
-SImg* working=nullptr;
 
 enum class ECommand
 {
@@ -30,153 +22,145 @@ enum class ECommand
 	Error
 };
 
-ECommand GetCommand(string&);
-void LoadEvent(string&);
-void StoreEvent(string&);
-void SwitchEvent(string&);
-void FreeEvent(string&);
-void BlurEvent(string& s) { cout << "blur: " << s << endl; }
-void ResizeEvent(string& s) { cout << "resize: " << s << endl; }
-void HelpEvent(string& s) { cout << "help: " << s << endl; }
-void ExitEvent() { cout << "exit" << endl; }
-void ErrorEvent(string& s) { cout << "error" << endl; }
-void MakeParams(vector<string>&);
-string LoadHelp();
-string StoreHelp();
+void HelpEvent(vector<string>&);
+void ErrorEvent();
+void ExitEvent() {  }
+pair<ECommand, vector<string>> MakeCommand(string&);
+
+map<string, ECommand> gCommands = {
+	{"load",ECommand::Load},
+	{"ld",ECommand::Load},
+	{"store",ECommand::Store},
+	{"s",ECommand::Store},
+	{"switch",ECommand::Switch},
+	{"free",ECommand::Free},
+	{"blur",ECommand::Blur},
+	{"resize",ECommand::Resize},
+	{"help",ECommand::Help},
+	{"h",ECommand::Help},
+	{"exit",ECommand::Exit},
+	{"quit",ECommand::Exit},
+	{"q",ECommand::Exit}
+};
 
 void MainLoop() {
-	prefix.clear();
+	CWork work;
 	bool isWork = true;
 	while (isWork) {
-		string command;
-		cout << "[" << prefix << "]";
-		getline(cin, command);
-		transform(command.begin(), command.end(), command.begin(), tolower);
-		switch (GetCommand(command)) {
+		string input;
+		cout << work.Prefix();
+		getline(cin, input);
+		transform(input.begin(), input.end(), input.begin(), tolower);
+		auto in = MakeCommand(input);
+		switch (in.first) {
 		case:: ECommand::Load:
-			LoadEvent(command);
+			work.Load(in.second);
 			break;
 		case ECommand::Store :
-			StoreEvent(command);
+			work.Store(in.second);
 			break;
 		case ECommand::Switch:
-			SwitchEvent(command);
+			work.Switch(in.second);
 			break;
 		case ECommand::Free:
-			FreeEvent(command);
+			work.Free(in.second);
+			break;
 		case ECommand::Blur:
-			BlurEvent(command);
+			work.Blur(in.second);
 			break;
 		case ECommand::Resize:
-			ResizeEvent(command);
+			work.Resize(in.second);
 			break;
 		case ECommand::Help:
-			HelpEvent(command);
+			HelpEvent(in.second);
 			break;
 		case ECommand::Exit:
 			ExitEvent();
 			return;
 		case ECommand::Error:
-			ErrorEvent(command);
+			ErrorEvent();
 			break;
 		}
 	}
-	matList.clear();
 }
 
-ECommand GetCommand(string& mCommand) {
-	static map<string, ECommand> commands = {
-		{"load",ECommand::Load},
-		{"ld",ECommand::Load},
-		{"store",ECommand::Store},
-		{"s",ECommand::Store},
-		{"switch",ECommand::Switch},
-		{"blur",ECommand::Blur},
-		{"resize",ECommand::Resize},
-		{"help",ECommand::Help},
-		{"h",ECommand::Help},
-		{"exit",ECommand::Exit},
-		{"quit",ECommand::Exit},
-		{"q",ECommand::Exit}
-	};
-	auto pos = mCommand.find(" ");
-	string command = pos==string::npos?mCommand:mCommand.substr(0, pos);
-	auto find = commands.find(command);
-	if (find == commands.end()) return ECommand::Error;
-	if (pos!=string::npos) pos= mCommand.find_first_not_of(" ", pos);
-	if (pos == string::npos) mCommand.clear();
-	else mCommand.erase(0, pos);
-	return find->second;
-}
-
-void LoadEvent(string& mParam) {
-	vector<string> params;
-	MakeParams(params);
-	switch (params.size()) {
-	default:
-		cout << "wrong params" << endl << LoadHelp() << endl;
-		break;
-	case 2: {
-		cv::Mat obj = cv::imread(params[0]);
-		if (obj.empty()) 
-			cout << "load error" << endl;
-		else if (matList.find(params[1]) == matList.end())
-			cout << "name is busy" << endl;
-		else {
-			prefix = params[1];
-			auto ret = matList.insert({ params[1],SImg{obj.clone(),obj.clone() } });
-			if (!ret.second) 
-				cout << "map insert error" << endl;
-			else {
-				cout << "load ok" << endl;
-				working = &ret.first->second;
-			}
+void HelpEvent(vector<string>& mParams) {
+	if (mParams.size() != 1)
+		cout << CommonHelp() << endl;
+	else {
+		auto it = gCommands.find(mParams[0]);
+		if (it == gCommands.end())
+			cout << CommonHelp() << endl;
+		else switch (it->second) {
+		default:
+			cout<<CommonHelp()<<endl;
+			break;
+		case::ECommand::Load:
+			cout<<LoadHelp()<<endl;
+			break;
+		case ECommand::Store:
+			cout<<StoreHelp<<endl;
+			break;
+		case ECommand::Switch:
+			cout<<SwitchHelp()<<endl;
+			break;
+		case ECommand::Free:
+			cout<<FreeHelp()<<endl;
+			break;
+		case ECommand::Blur:
+			cout<<BlurHelp()<<endl;
+			break;
+		case ECommand::Resize:
+			cout<<ResizeHelp()<<endl;
+			break;
 		}
 	}
+}
+
+void MakeParams(string& mParams, vector<string>& mOut) {
+	auto it = mParams.begin();
+	while (it != mParams.end()) {
+		string param;
+		while (it != mParams.end() && *it != ' ') {
+			param += *it;
+			++it;
+		}
+		mOut.push_back(param);
+		while (it!=mParams.end()&&*it == ' ') ++it;
 	}
 }
 
-void StoreEvent(string& mParam) {
-	vector<string> params;
-	MakeParams(params);
-	switch (params.size()) {
-	case 1:
-		if (cv::imwrite(params[0], working->dst))
-			cout << "save ok" << endl;
-		else
-			cout << "save error" << endl;
-		break;
-	case 2: {
-		auto ret = matList.find(params[0]);
-		if (ret == matList.end())
-			cout << "wrong name" << endl;
-		else if (cv::imwrite(params[1], ret->second.dst))
-			cout << "save ok" << endl;
-		else
-			cout << "save error" << endl;
-	}
-		  break;
-	default:
-		cout << "wrong params" << endl << StoreHelp() << endl;
-		break;
+void MakeParams(string& mParams, vector<string>& mOut, const char mDel) {
+	auto it = mParams.begin();
+	while (it != mParams.end()) {
+		string param;
+		while (it != mParams.end() && *it != mDel) {
+			if (*it != ' ') param += *it;
+			++it;
+		}
+		if (it != mParams.end()) ++it;
+		mOut.push_back(param);
 	}
 }
 
-void SwitchEvent(string& mParam) {
-	vector<string> params;
-	MakeParams(params);
-	switch (params.size()) {
-	default:
-		cout << "wrong params" << endl << LoadHelp() << endl;
-		break;
-	case 1: {
-		auto ret = matList.find(params[0]);
-		if (ret == matList.end())
-			cout << "wrong name" << endl;
-		else {
-			prefix = ret->first;
-			working = &ret->second;
+pair<ECommand, vector<string>> MakeCommand(string& mInput) {
+	pair<ECommand, vector<string>> ret;
+	auto pos = mInput.find(" ");
+	string command = mInput.substr(0, pos);
+	auto find = gCommands.find(command);
+	if (find == gCommands.end()) 
+		ret.first = ECommand::Error;
+	else {
+		ret.first = find->second;
+		if (pos != string::npos &&
+			(pos = mInput.find_first_not_of(' ', pos)) != string::npos) {
+			string params = mInput.substr(pos);
+			MakeParams(params,ret.second);
 		}
 	}
-	}
+	return ret;
+}
+
+void ErrorEvent() {
+	cout << "wrong command" << endl << CommonHelp() << endl;
 }
