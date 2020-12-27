@@ -14,7 +14,7 @@ enum class ECommand
 	Load,
 	Store,
 	Switch,
-	Dir,
+	List,
 	Free,
 	Blur,
 	Resize,
@@ -34,7 +34,7 @@ map<string, ECommand> gCommands = {
 	{"store",ECommand::Store},
 	{"s",ECommand::Store},
 	{"switch",ECommand::Switch},
-	{"dir",ECommand::Dir},
+	{"list",ECommand::List},
 	{"free",ECommand::Free},
 	{"blur",ECommand::Blur},
 	{"resize",ECommand::Resize},
@@ -63,8 +63,8 @@ void MainLoop() {
 		case ECommand::Switch:
 			work.Switch(in.second);
 			break;
-		case ECommand::Dir:
-			work.Dir();
+		case ECommand::List:
+			work.List();
 			break;
 		case ECommand::Free:
 			work.Free(in.second);
@@ -103,7 +103,7 @@ void HelpEvent(vector<string>& mParams) {
 			cout<<LoadHelp()<<endl;
 			break;
 		case ECommand::Store:
-			cout<<StoreHelp<<endl;
+			cout<<StoreHelp()<<endl;
 			break;
 		case ECommand::Switch:
 			cout<<SwitchHelp()<<endl;
@@ -121,11 +121,26 @@ void HelpEvent(vector<string>& mParams) {
 	}
 }
 
+string ParamWithSpaces(string::iterator& it, string::iterator& end) {
+	string ret;
+	++it;
+	while (it != end && *it != '\"') {
+		ret += *it;
+		++it;
+	}
+	if (it != end) ++it;
+	return ret;
+};
+
 void MakeParams(string& mParams, vector<string>& mOut) {
 	auto it = mParams.begin();
 	while (it != mParams.end()) {
 		string param;
 		while (it != mParams.end() && *it != ' ') {
+			if (*it == '\"'&&param.empty()) {
+				param = ParamWithSpaces(it, mParams.end());
+				break;
+			}
 			param += *it;
 			++it;
 		}
@@ -139,6 +154,10 @@ void MakeParams(string& mParams, vector<string>& mOut, const char mDel) {
 	while (it != mParams.end()) {
 		string param;
 		while (it != mParams.end() && *it != mDel) {
+			if (*it == '\"' && param.empty()) {
+				param = ParamWithSpaces(it, mParams.end());
+				break;
+			}
 			if (*it != ' ') param += *it;
 			++it;
 		}
@@ -166,5 +185,5 @@ pair<ECommand, vector<string>> MakeCommand(string& mInput) {
 }
 
 void ErrorEvent() {
-	cout << "wrong command" << endl << CommonHelp() << endl;
+	cout << "wrong command" << endl << CommandList() << endl;
 }

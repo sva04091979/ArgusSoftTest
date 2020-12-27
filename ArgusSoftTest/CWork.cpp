@@ -21,9 +21,8 @@ bool CWork::Load(vector<string>& mParams) {
 			cout << "load error" << endl;
 		else {
 			auto it = cContainer.insert({ mParams[0],nullptr });
-			if (it.second) {
-				ret = true;
-				cWork = new CMat(mat);
+			if (ret=it.second) {
+				cWork = new CMat(mat,mParams[1]);
 				it.first->second = cWork;
 				MakePrefix(mParams[0]);
 				cout << "load ok" << endl;
@@ -41,8 +40,10 @@ bool CWork::Store(vector<string> &mParams) {
 	bool ret = false;
 	switch (mParams.size()) {
 	case 1:
-		if (ret=cv::imwrite(mParams[0], cWork->Img()))
-			cout << cWorkName<< " save ok" << endl;
+		if (ret = cv::imwrite(mParams[0], cWork->Img())) {
+			cout << cWorkName << " save ok" << endl;
+			cWork->File(mParams[0]);
+		}
 		else 
 			cout <<cWorkName<< " save error" << endl;
 		break;
@@ -50,8 +51,10 @@ bool CWork::Store(vector<string> &mParams) {
 		auto find = cContainer.find(mParams[0]);
 		if (find == cContainer.end())
 			cout << "wrong name" << endl;
-		else if (ret=cv::imwrite(mParams[1], find->second->Img()))
-			cout <<mParams[0]<< " save ok" << endl;
+		else if (ret = cv::imwrite(mParams[1], find->second->Img())) {
+			cout << mParams[0] << " save ok" << endl;
+			find->second->File(mParams[1]);
+		}
 		else
 			cout << mParams[0]<<" save error" << endl;
 	}
@@ -71,12 +74,12 @@ bool CWork::Switch(vector<string>& mParams) {
 		break;
 	case 1: {
 		auto find = cContainer.find(mParams[0]);
-		if (ret = (find == cContainer.end()))
-			cout << "wrong name" << endl;
-		else {
+		if (ret != (find == cContainer.end())) {
 			MakePrefix(mParams[0]);
 			cWork = find->second;
 		}
+		else
+			cout << "wrong name" << endl;
 	}
 		  break;
 	}
@@ -96,10 +99,7 @@ bool CWork::Free(vector<string> &mParams){
 		break;
 	case 1: {
 		auto find = cContainer.find(mParams[0]);
-		if (ret=(find == cContainer.end()))
-			cout << "wrong name" << endl;
-		else {
-			ret = true;
+		if (ret!=(find == cContainer.end())) {
 			delete find->second;
 			cContainer.erase(find);
 			if (mParams[0] == cWorkName) {
@@ -108,14 +108,16 @@ bool CWork::Free(vector<string> &mParams){
 			}
 			cout << mParams[0] << " free" << endl;
 		}
+		else
+			cout << "wrong name" << endl;
 	}
 	}
 	return ret;
 }
 
-void CWork::Dir() {
-	for (auto it : cContainer)
-		cout << it.first << endl;
+void CWork::List() {
+	for (auto& it : cContainer)
+		cout << it.first << "\t" << (it.second->File().empty() ? "no file" : it.second->File()) << endl;
 }
 
 bool CWork::Blur(vector<string>& mParams) {
@@ -257,8 +259,8 @@ bool CWork::CheckBlurParams(vector<string>& mParams, cv::Size& mSize) {
 			}
 			if (ret) mSize = { x,y };
 		}
-		if (!ret)
-			cout << "wrong params" << endl << BlurHelp() << endl;
-		return ret;
 	}
+	if (!ret)
+		cout << "wrong params" << endl << BlurHelp() << endl;
+	return ret;
 }
