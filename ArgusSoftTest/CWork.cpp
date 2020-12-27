@@ -38,25 +38,30 @@ bool CWork::Load(vector<string>& mParams) {
 
 bool CWork::Store(vector<string> &mParams) {
 	bool ret = false;
+	auto writer = [](string& name, string& file, CMat* mat) {
+		bool ret = false;
+		try {
+			if (ret = cv::imwrite(file, mat->Img())) {
+				cout << name << " save ok" << endl;
+				mat->File(file);
+			}
+			else
+				cout << name << " save error" << endl;
+		}
+		catch (...) {
+			cout << name << " save raised an exception" << endl;
+		}
+		return ret;
+	};
 	switch (mParams.size()) {
 	case 1:
-		if (ret = cv::imwrite(mParams[0], cWork->Img())) {
-			cout << cWorkName << " save ok" << endl;
-			cWork->File(mParams[0]);
-		}
-		else 
-			cout <<cWorkName<< " save error" << endl;
+		ret = writer(cWorkName, mParams[0], cWork);
 		break;
 	case 2: {
 		auto find = cContainer.find(mParams[0]);
 		if (find == cContainer.end())
 			cout << "wrong name" << endl;
-		else if (ret = cv::imwrite(mParams[1], find->second->Img())) {
-			cout << mParams[0] << " save ok" << endl;
-			find->second->File(mParams[1]);
-		}
-		else
-			cout << mParams[0]<<" save error" << endl;
+		else ret = writer(mParams[0], mParams[1], find->second);
 	}
 		  break;
 	default:
@@ -74,7 +79,7 @@ bool CWork::Switch(vector<string>& mParams) {
 		break;
 	case 1: {
 		auto find = cContainer.find(mParams[0]);
-		if (ret != (find == cContainer.end())) {
+		if (ret = (find != cContainer.end())) {
 			MakePrefix(mParams[0]);
 			cWork = find->second;
 		}
@@ -99,7 +104,7 @@ bool CWork::Free(vector<string> &mParams){
 		break;
 	case 1: {
 		auto find = cContainer.find(mParams[0]);
-		if (ret!=(find == cContainer.end())) {
+		if (ret=(find != cContainer.end())) {
 			delete find->second;
 			cContainer.erase(find);
 			if (mParams[0] == cWorkName) {

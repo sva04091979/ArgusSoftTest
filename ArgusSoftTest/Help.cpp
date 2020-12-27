@@ -8,7 +8,6 @@ string SpaceInfo();
 
 string CommonHelp() {
 	return DefaultInfo()+"\n"+
-		"----------------------\n"+
 		SpaceInfo() + "\n" +
 		"----------------------\n" +
 		LoadHelp(false) + "\n" +
@@ -21,9 +20,9 @@ string CommonHelp() {
 		"----------------------\n" +
 		FreeHelp(false) + "\n" +
 		"----------------------\n" +
-		BlurHelp(false) + "\n" +
+		BlurHelp(false,false) + "\n" +
 		"----------------------\n" +
-		ResizeHelp(false) + "\n" +
+		ResizeHelp(false,false) + "\n" +
 		"----------------------\n" +
 		HelpHelp() + "\n" +
 		"----------------------\n" +
